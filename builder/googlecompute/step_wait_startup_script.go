@@ -21,6 +21,10 @@ func (s *StepWaitStartupScript) Run(ctx context.Context, state multistep.StateBa
 	ui := state.Get("ui").(packer.Ui)
 	instanceName := state.Get("instance_name").(string)
 
+	if config.WrapStartupScriptFile.False() {
+		return multistep.ActionContinue
+	}
+
 	ui.Say("Waiting for any running startup script to finish...")
 
 	// Keep checking the serial port output to see if the startup script is done.
