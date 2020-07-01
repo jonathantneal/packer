@@ -30,3 +30,26 @@ func TestStepWaitStartupScript(t *testing.T) {
 	assert.Equal(t, d.GetInstanceMetadataZone, testZone, "Incorrect zone passed to GetInstanceMetadata.")
 	assert.Equal(t, d.GetInstanceMetadataName, testInstanceName, "Incorrect instance name passed to GetInstanceMetadata.")
 }
+
+func TestStepWaitStartupScript_withUnWrappedStartupScript(t *testing.T) {
+	state := testState(t)
+	step := new(StepWaitStartupScript)
+	c := state.Get("config").(*Config)
+	d := state.Get("driver").(*DriverMock)
+
+	testZone := "test-zone"
+	testInstanceName := "test-instance-name"
+
+	c.StartupScriptFile = "startup.sh"
+	c.UnWrappedStartupScript = true
+	c.Zone = testZone
+	state.Put("instance_name", testInstanceName)
+
+	// Run the step.
+	assert.Equal(t, step.Run(context.Background(), state), multistep.ActionContinue, "Step should have continued.")
+
+	// Check that GetInstanceMetadata is empty; thus never called.
+	assert.Equal(t, d.GetInstanceMetadataResult, "", "MetadataResult was not empty.")
+	assert.Equal(t, d.GetInstanceMetadataZone, "", "Zone was not empty.")
+	assert.Equal(t, d.GetInstanceMetadataName, "", "Instance name was not empty.")
+}

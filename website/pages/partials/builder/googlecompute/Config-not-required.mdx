@@ -151,10 +151,14 @@
 -   `startup_script_file` (string) - The path to a startup script to run on the VM from which the image will
     be made.
     
--   `wrap_startup_script` (boolean) - If "true", the contents of `startup_script_file` is wrapped in a Packer specific
-    script that tracks the execution and completion of the provided
-    script file. The wrapper ensures that the builder will not continue until
-    the startup script has been executed. Defaults to "true".
+-   `unwrapped_startup_script` (bool) - For backwards compatibility this option defaults to `false`
+    in the future it will default to `true`.
+    If true, any user provided startup scripts will be passed directly to the
+    Google compute instance without modification. Currently the
+    Google builder uses a wrapper script that tracks the execution
+    and completion of any user provided startup script file.
+    The wrapper ensures that the builder will not continue until
+    the startup script has been executed.
     - The use of the wrapped script file requires that the user or service account
     running the build has the compute.instance.Metadata role.
     

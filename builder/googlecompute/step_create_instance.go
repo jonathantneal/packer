@@ -52,7 +52,7 @@ func (c *Config) createInstanceMetadata(sourceImage *Image, sshPublicKey string)
 	instanceMetadata[StartupScriptKey] = startupScript
 
 	// Wrap any startup script with our own startup script.
-	if startupScript != "" && c.WrapStartupScriptFile.True() {
+	if startupScript != "" && !c.UnWrappedStartupScript {
 		instanceMetadata[StartupWrappedScriptKey] = startupScript
 		instanceMetadata[StartupScriptKey] = StartupScriptLinux
 		instanceMetadata[StartupScriptStatusKey] = StartupScriptStatusNotDone
